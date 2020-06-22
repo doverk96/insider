@@ -1,0 +1,29 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: node-js-app-cpu-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: node-js-app
+  minReplicas: 7
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nextcloud-memory
+spec:
+  maxReplicas: 10
+  minReplicas: 7
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: node-js-app
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 60

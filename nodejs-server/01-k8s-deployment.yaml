@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-js-service
+spec:
+  selector:
+    app: node-js-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: node-js-app
+  labels:
+    app: node-js-app
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: node-js-app
+  template:
+    metadata:
+      labels:
+        app: node-js-app
+    spec:
+      containers:
+        - name: node-js-app
+          image: 951826128810.dkr.ecr.us-east-2.amazonaws.com/dove96/ronak-ecr-21062020:nodejs-test-latest
+          ports:
+            - name: web
+              containerPort: 8080
+          resources:
+            limits:
+              cpu: 500m
+              memory: "1024Mi"
+            requests:
+              cpu: 200m
+              memory: 100
